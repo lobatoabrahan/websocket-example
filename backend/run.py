@@ -1,21 +1,31 @@
 from fastapi import FastAPI, WebSocket
 import random
+import asyncio
 
 # Create application
 app = FastAPI(title='WebSocket Example')
 
+# Keep track of all active websockets
+active_connections = []
+
+# Initialize the counter
+count = 0
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
-    print('a new websocket to create.')
+    global count
     await websocket.accept()
-    while True:
-        try:
+    # Add the websocket connection to the list of active connections
+    active_connections.append(websocket)
+    try:
+        while True:
             # Wait for any message from the client
-            await websocket.receive_text()
-            # Send message to the client
-            resp = {'value': random.uniform(0, 1)}
-            await websocket.send_json(resp)
-        except Exception as e:
-            print('error:', e)
-            break
-    print('Bye..')
+            data = await websocket.receive_text()
+            if data == "increment":
+                count += 1
+                for connection in active_connections:
+                    await connection.send_text(str(count))
+    except Exception as e:
+        # Remove the websocket connection from the list of active connections
+        active_connections.remove(websocket)
+        print('error:', e)
