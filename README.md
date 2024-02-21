@@ -7,7 +7,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 The server is implemented with FastAPI. First, install the dependencies:
 
 ```
-pip install fastapi "uvicorn[standard]"
+pip install fastapi uvicorn
 ```
 
 And then, run it:
@@ -25,19 +25,19 @@ The client is implemented usign React and Recharts.
 Go to the frontend directory:
 
 ```
-cd frontend
+cd vite-project
 ```
 
 Install the dependencies:
 
 ```
-yarn install
+npm install
 ```
 
 And run it:
 
 ``` 
-yarn start
+npm run dev
 ```
 
 Open the browser in `localhost:3000` and you must see a chart being updated every second.
